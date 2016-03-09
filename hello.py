@@ -1,7 +1,8 @@
- def app (environ, start_response):
-  status = '200 OK'
-  response_headers = [('Content-Type','text/plain')]
-  start_response(status, response_headers)
-  resp = environ['QUERY_STRING'].split("&")
-  resp = [item+"\r\n" for item in resp]
-  return resp
+def wsgi_application(environ, start_response):
+    body = environ['QUERY_STRING']
+    body = '\n'.join(body.split('&'))
+    status = '200 OK'
+    headers = [('Content-Type', 'text/plain'),
+        ('Content-Length', str(len(body)))]
+    start_response(status, headers)
+    return [body]
